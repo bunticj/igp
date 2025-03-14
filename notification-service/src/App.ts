@@ -3,9 +3,13 @@ import http from "http";
 import https from "https";
 import fs from "fs"
 import { Server as IoServer } from "socket.io"
-import EnvConfig from "./config/EnvConfig";
+import { EnvConfig} from "./config/EnvConfig";
+import { SocketManager } from "./socket/SocketManager";
 import { LOGGER } from "./utils/Logger";
-import { Constants } from "./config/Constants";
+import { HelperConstants } from "./config/HelperConstants";
+import { KConsumer } from "./kafka/KafkaConsumer";
+import { errorHandler } from "./utils/ErrorHandler";
+import { KProducer } from "./kafka/KafkaProducer";
 
 
 function initServer() : IoServer {
@@ -20,8 +24,12 @@ function initServer() : IoServer {
     const ioServer = new IoServer(server, { allowEIO3: true, cors: { origin: "*" } });
    
     server.listen(EnvConfig.NOTIFICATION_PORT, () => {
-        LOGGER.info(`Server available at ${Constants.serverFullUrlName}`);
+        LOGGER.info(`Server available at ${HelperConstants.serverFullUrlName}`);
     });
     return ioServer;
 }
-initServer()
+
+export const socketManager = new SocketManager(initServer())
+
+KConsumer.consumeMessages().catch(err => errorHandler(err))
+KProducer.produceMessages().catch(err => errorHandler(err))

@@ -1,0 +1,26 @@
+services:
+  database:
+    image: postgres:14-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: casino
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+    - "2181:2181"
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "${KAFKA_PORT}:${KAFKA_PORT}" 
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: ${KAFKA_ADVERTISED_HOST_NAME}
+      KAFKA_LISTENER_SECURITY_PROTOCOL: ${KAFKA_LISTENER_SECURITY_PROTOCOL}
+      KAFKA_ZOOKEEPER_CONNECT: ${KAFKA_ZOOKEEPER_CONNECT}
+      KAFKA_CREATE_TOPICS: ${KAFKA_CREATE_TOPICS}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - "zookeeper"
+

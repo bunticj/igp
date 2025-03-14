@@ -1,4 +1,4 @@
-import EnvConfig from "../config/EnvConfig";
+import {EnvConfig} from "../config/EnvConfig";
 
  class Logger {
     private verbose: Boolean;
@@ -17,7 +17,7 @@ import EnvConfig from "../config/EnvConfig";
     public info(message: string): void {
         console.log(new Date().toISOString() + " [INFO]: " + message);
     }
-    
+
     public critical(error: string): void {
         console.error(new Date().toISOString() + " [CRITICAL]: " + error);
     }
