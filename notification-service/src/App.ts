@@ -24,7 +24,7 @@ function initServer() : IoServer {
     const ioServer = new IoServer(server, { allowEIO3: true, cors: { origin: "*" } });
    
     server.listen(EnvConfig.NOTIFICATION_PORT, () => {
-        LOGGER.info(`Server available at ${HelperConstants.serverFullUrlName}`);
+        LOGGER.info(`Notification service available at ${HelperConstants.serverFullUrlName}`);
     });
     return ioServer;
 }
