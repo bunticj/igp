@@ -7,14 +7,12 @@ import { EnvConfig} from "./config/EnvConfig";
 import { SocketManager } from "./socket/SocketManager";
 import { LOGGER } from "./utils/Logger";
 import { HelperConstants } from "./config/HelperConstants";
-import { KConsumer } from "./kafka/KafkaConsumer";
-import { errorHandler } from "./utils/ErrorHandler";
-import { KProducer } from "./kafka/KafkaProducer";
+
 
 
 function initServer() : IoServer {
     let server: http.Server | https.Server;
-    if (EnvConfig.HTTP_PROTOCOL_TYPE === 'https') {
+    if (EnvConfig.HTTP_PROTOCOL_TYPE === 'https' &&EnvConfig.HTTPS_KEY_PATH && EnvConfig.HTTPS_CERT_PATH ) {
         const key = fs.readFileSync(`${EnvConfig.HTTPS_KEY_PATH}`);
         const cert = fs.readFileSync(`${EnvConfig.HTTPS_CERT_PATH}`);
         server = https.createServer({ key, cert });
@@ -30,6 +28,3 @@ function initServer() : IoServer {
 }
 
 export const socketManager = new SocketManager(initServer())
-
-KConsumer.consumeMessages().catch(err => errorHandler(err))
-KProducer.produceMessages().catch(err => errorHandler(err))

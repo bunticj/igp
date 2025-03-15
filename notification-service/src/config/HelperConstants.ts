@@ -1,7 +1,6 @@
 import { EnvConfig } from "./EnvConfig";
 
 export const HelperConstants = {
-    // configuration names
     serverFullUrlName: `${EnvConfig.HTTP_PROTOCOL_TYPE}://${EnvConfig.NOTIFICATION_HOST}:${EnvConfig.NOTIFICATION_PORT}`,
 
     // socket event names
