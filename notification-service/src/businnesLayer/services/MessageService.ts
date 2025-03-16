@@ -1,9 +1,9 @@
-import { socketManager } from "../App";
+import { socketManager } from "../../App";
 import { HelperConstants } from "../config/HelperConstants";
 import { MessageType } from "../enum/MessageType";
-import { KProducer } from "../kafka/KafkaProducer";
+import { KProducer } from "../../kafkaLayer/KafkaProducer";
 import { Message } from "../model/Message";
-import { LOGGER } from "../utils/Logger";
+import { LOGGER } from "../config/Initialize";
 
 
 export default class MessageService {

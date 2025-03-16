@@ -1,9 +1,8 @@
 import { Consumer } from 'kafkajs';
-import { EnvConfig } from '../config/EnvConfig';
-import { kafkaConfig } from '../config/KafkaConfig';
-import { LOGGER } from '../utils/Logger';
+import { EnvConfig } from '../businnesLayer/config/EnvConfig';
+import { kafkaConfig } from '../businnesLayer/config/KafkaConfig';
 import { KafkaClient } from './KafkaClient';
-import { errorHandler } from '../utils/ErrorHandler';
+import { ERR_HANDLER, LOGGER } from '../businnesLayer/config/Initialize';
 
 class KafkaConsumer {
     private consumer: Consumer
@@ -36,15 +35,6 @@ class KafkaConsumer {
 export const KConsumer = new KafkaConsumer();
 
 setTimeout(()=> {
- KConsumer.startConsuming().catch(err => errorHandler(err))
-
+ KConsumer.startConsuming().catch(err => ERR_HANDLER.catchError(err))
 }, 7000)
 
-
-process.on('SIGINT', async () => {
-    await KConsumer.shutDown();
-    });
-
-process.on('SIGTERM', async () => {
-      await KConsumer.shutDown();
-});

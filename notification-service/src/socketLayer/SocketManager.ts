@@ -1,11 +1,11 @@
 
 import { Server, Socket } from 'socket.io';
-import { LOGGER } from '../utils/Logger';
-import { IAuthSocket } from '../interface/IAuthSocket';
-import { HelperConstants } from '../config/HelperConstants';
-import SocketHandler from './SocketHandler';
-import SchedulerService from '../services/SchedulerService';
-import { SchedulerType } from '../enum/SchedulerType';
+import { IAuthSocket } from '../businnesLayer/interface/IAuthSocket';
+import { HelperConstants } from '../businnesLayer/config/HelperConstants';
+import { SocketHandler } from './SocketHandler';
+import SchedulerService from '../businnesLayer/services/SchedulerService';
+import { SchedulerType } from '../businnesLayer/enum/SchedulerType';
+import { LOGGER } from '../businnesLayer/config/Initialize';
 
 export class SocketManager {
     private userSockets: Map<number, SocketHandler> = new Map();
@@ -50,13 +50,13 @@ export class SocketManager {
         this.userSockets.set(userId, new SocketHandler(socket, oldSocketHandler?.socket));
     }
 
-     public removeSocket(userId: number) {
+    public removeSocket(userId: number) {
         SchedulerService.cancelScheduler(SchedulerType.DisconnectPlayer, userId);
         this.userSockets.delete(userId)
     }
 
-    public getSocketId(userId: number) : string | undefined {
-        return  this.userSockets.get(userId)?.socket.id
-      }
+    public getSocketId(userId: number): string | undefined {
+        return this.userSockets.get(userId)?.socket.id
+    }
 }
 

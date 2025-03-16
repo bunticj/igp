@@ -1,8 +1,7 @@
-import { LOGGER } from "../utils/Logger";
 import { KafkaClient } from "./KafkaClient"
 import { Producer } from 'kafkajs';
-import { EnvConfig } from '../config/EnvConfig';
-import { errorHandler } from "../utils/ErrorHandler";
+import { EnvConfig } from '../businnesLayer/config/EnvConfig';
+import { ERR_HANDLER, LOGGER } from "../businnesLayer/config/Initialize";
 
 class KafkaProducer {
     private producer: Producer
@@ -24,7 +23,7 @@ class KafkaProducer {
 export const KProducer = new KafkaProducer();
 
 setTimeout(()=> {
-   KProducer.produceMessages().catch(err => errorHandler(err))
+   KProducer.produceMessages().catch(err => ERR_HANDLER.catchError(err))
    }, 10000)
 
 

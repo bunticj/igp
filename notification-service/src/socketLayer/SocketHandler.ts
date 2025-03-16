@@ -1,17 +1,16 @@
-import { socketManager } from "../App";
-import { HelperConstants } from "../config/HelperConstants";
-import { MessageType } from "../enum/MessageType";
-import { SchedulerType } from "../enum/SchedulerType";
-import { IAuthSocket } from "../interface/IAuthSocket";
-import { CustomError } from "../model/CustomError";
-import { Message } from "../model/Message";
-import MessageService from "../services/MessageService";
-import SchedulerService from "../services/SchedulerService";
-import { errorHandler } from "../utils/ErrorHandler";
-import { LOGGER } from "../utils/Logger";
+import {  socketManager } from "../App";
+import { HelperConstants } from "../businnesLayer/config/HelperConstants";
+import { MessageType } from "../businnesLayer/enum/MessageType";
+import { SchedulerType } from "../businnesLayer/enum/SchedulerType";
+import { IAuthSocket } from "../businnesLayer/interface/IAuthSocket";
+import { Message } from "../businnesLayer/model/Message";
+import MessageService from "../businnesLayer/services/MessageService";
+import SchedulerService from "../businnesLayer/services/SchedulerService";
+import { ERR_HANDLER, LOGGER } from "../businnesLayer/config/Initialize";
+import { CustomError } from "../../../common/model/CustomError";
 
 
-export default class SocketHandler {
+export class SocketHandler {
     public socket: IAuthSocket;
     constructor(socket: IAuthSocket, oldSocket?: IAuthSocket) {
         this.socket = socket;
@@ -59,7 +58,7 @@ export default class SocketHandler {
 
             }
             catch (err) {
-                const errorMessage = new Message(MessageType.ErrorMessage, errorHandler(err as CustomError))
+                const errorMessage = new Message(MessageType.ErrorMessage, ERR_HANDLER.catchError(err as CustomError, {data}))
                 MessageService.sendMessageToSocketId(this.socket.id, errorMessage);
             }
         });

@@ -1,6 +1,6 @@
 import { Kafka } from "kafkajs";
-import { EnvConfig } from "../config/EnvConfig";
-import { LOGGER } from "../utils/Logger";
+import { EnvConfig } from "../businnesLayer/config/EnvConfig";
+import { LOGGER } from "../businnesLayer/config/Initialize";
 
 export class KafkaClient {
     private static kafka: Kafka;
