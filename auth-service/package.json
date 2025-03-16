@@ -6,24 +6,29 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node ./src/App.ts",
-    "start": "node ./dist/output/App.js",
+    "start": "node ./dist/output/auth-service/src/App.js",
     "compile": "tsc -b"
   },
   "author": "Josip Buntic",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-winston": "^4.2.0",
     "pg": "8.14.0",
-    "typeorm": "0.3.21",
+    "reflect-metadata": "^0.2.2",
+    "swagger-ui-express": "^5.0.1",
+    "typeorm": "^0.3.21",
     "winston": "^3.17.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/swagger-ui-express": "^4.1.8",
     "ts-node": "^10.9.2",
-    "typescript": "5.8.2",
-    "@types/express": "^5.0.0"
+    "typescript": "5.8.2"
   }
 }
