@@ -1,0 +1,9 @@
+{
+  "name": "common",
+  "version": "1.0.0",
+  "description": "Common modules, for reusing across microservices",
+  "private": true,
+  "main": "index.js",
+  "author": "Josip Buntic",
+  "license": "ISC"
+}
