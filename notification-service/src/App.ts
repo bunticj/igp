@@ -3,10 +3,10 @@ import http from "http";
 import https from "https";
 import fs from "fs"
 import { Server as IoServer } from "socket.io"
-import { EnvConfig} from "./config/EnvConfig";
-import { SocketManager } from "./socket/SocketManager";
-import { LOGGER } from "./utils/Logger";
-import { HelperConstants } from "./config/HelperConstants";
+import { LOGGER } from "./businnesLayer/utils/Logger";
+import { EnvConfig } from "./businnesLayer/config/EnvConfig";
+import { HelperConstants } from "./businnesLayer/config/HelperConstants";
+import { SocketManager } from "./socketLayer/SocketManager";
 
 
 

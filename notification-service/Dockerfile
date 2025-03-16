@@ -1,12 +1,15 @@
 FROM node:20-alpine
 
-WORKDIR /src/api-server
+WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY ./notification-service/package*.json ./
 
 RUN npm install
 
-COPY . .
+COPY ./notification-service ./notification-service
+COPY ./common ./common  
+
+WORKDIR /usr/src/app/notification-service
 
 RUN npm run compile
 

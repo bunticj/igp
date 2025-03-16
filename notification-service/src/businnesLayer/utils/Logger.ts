@@ -1,4 +1,4 @@
-import {EnvConfig} from "../config/EnvConfig";
+import { EnvConfig } from "../config/EnvConfig";
 
  class Logger {
     private verbose: Boolean;

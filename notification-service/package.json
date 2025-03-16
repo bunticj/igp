@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node ./src/App.ts",
-    "start": "node ./dist/output/App.js",
+    "start": "node ./dist/output/notification-service/src/App.js",
     "compile": "tsc -b"
   },
   "author": "Josip Buntic",
