@@ -1,8 +1,8 @@
 import { Consumer } from 'kafkajs';
-import { EnvConfig } from '../businnesLayer/config/EnvConfig';
-import { kafkaConfig } from '../businnesLayer/config/KafkaConfig';
+import { EnvConfig } from '../config/EnvConfig';
+import { kafkaConfig } from '../config/KafkaConfig';
 import { KafkaClient } from './KafkaClient';
-import { ERR_HANDLER, LOGGER } from '../businnesLayer/config/Initialize';
+import { ERR_HANDLER, LOGGER } from '../config/Initialize';
 
 class KafkaConsumer {
     private consumer: Consumer

@@ -1,6 +1,6 @@
 import { socketManager } from "../../App";
-import { HelperConstants } from "../config/HelperConstants";
-import { LOGGER } from "../config/Initialize";
+import { HelperConstants } from "../../config/HelperConstants";
+import { LOGGER } from "../../config/Initialize";
 import { SchedulerType } from "../enum/SchedulerType";
 
 export default class SchedulerService {

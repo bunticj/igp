@@ -13,8 +13,11 @@ export class ErrorHandler {
         switch (errorType) {
             case ErrorType.Unauthorized: return 401;
             case ErrorType.Forbidden: return 403;
-            case ErrorType.NotFound: return 404;
-            case ErrorType.UnknownError: return 500;
+            case ErrorType.NotFound:
+            case ErrorType.UserNotFound:
+                return 404;
+            case ErrorType.UnknownError:
+                return 500;
             default: return 400;
         }
     }
@@ -39,5 +42,5 @@ export class ErrorHandler {
         return new ErrorResponse({ errorType: customError.errorType, message: error.message }, status);
     }
 
-    
+
 }

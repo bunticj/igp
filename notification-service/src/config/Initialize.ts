@@ -1,6 +1,6 @@
 import { EnvConfig } from "./EnvConfig";
-import { ErrorHandler } from "../../../../common/util/ErrorHandler";
-import { Logger } from "../../../../common/util/Logger";
+import { ErrorHandler } from "../../../common/util/ErrorHandler";
+import { Logger } from "../../../common/util/Logger";
 
 // Init logger
 export const LOGGER = new Logger(EnvConfig.VERBOSE_LOGS);

@@ -8,8 +8,6 @@ class UserService {
         this.repository = new UserRepository();
     }
 
-
-
     public async getByUserId(userId: number): Promise<User | null> {
         const userData = await this.repository.findById(userId);
         return userData;
@@ -20,7 +18,7 @@ class UserService {
         return userData;
     }
 
-    public async createUser(username: string, hashedPass: string, roleType: RoleType): Promise<Omit<User, "password">> {
+    public async createUser(username: string, hashedPass: string, roleType: RoleType): Promise<User> {
         const newUser = new User();
         newUser.username = username;
         newUser.password = hashedPass;

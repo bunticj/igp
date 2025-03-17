@@ -1,11 +1,11 @@
 
 import { Server, Socket } from 'socket.io';
 import { IAuthSocket } from '../businnesLayer/interface/IAuthSocket';
-import { HelperConstants } from '../businnesLayer/config/HelperConstants';
+import { HelperConstants } from '../config/HelperConstants';
 import { SocketHandler } from './SocketHandler';
 import SchedulerService from '../businnesLayer/services/SchedulerService';
 import { SchedulerType } from '../businnesLayer/enum/SchedulerType';
-import { LOGGER } from '../businnesLayer/config/Initialize';
+import { LOGGER } from '../config/Initialize';
 
 export class SocketManager {
     private userSockets: Map<number, SocketHandler> = new Map();

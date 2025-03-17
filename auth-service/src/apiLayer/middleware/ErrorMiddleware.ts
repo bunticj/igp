@@ -1,9 +1,8 @@
 
 import { ErrorType } from "../../../../common/enum/ErrorType";
 import { CustomError } from "../../../../common/model/CustomError";
-import { ErrorResponse } from "../../../../common/model/ErrorResponse";
 import express from "express";
-import { ERR_HANDLER } from "../../businessLayer/config/Initialize";
+import { ERR_HANDLER } from "../../config/Initialize";
 
 // handle express errors
 export const errorInterceptor = (error: any, req: express.Request, res: express.Response, next: express.NextFunction): void => {
@@ -20,10 +19,7 @@ export const errorInterceptor = (error: any, req: express.Request, res: express.
     }
 };
 
-export const notFound = (req: express.Request, res: express.Response): void => {
-    const errorResponse = new ErrorResponse({ errorType: ErrorType.NotFound, message: "Resource not found" }, 404);
-    res.status(404).send(errorResponse);
-};
+
 
 
 

@@ -1,0 +1,20 @@
+import { EnvConfig } from "./EnvConfig";
+import { WinstonLogger } from "../businessLayer/util/WinstonLogger";
+import { ErrorHandler } from "../../../common/util/ErrorHandler";
+import DataSource from "../dataAccessLayer/OrmConfig"
+import { AxiosHttpClient } from "../businessLayer/util/AxiosHttpClient";
+
+// Init logger
+export const LOGGER = new WinstonLogger(EnvConfig.VERBOSE_LOGS);
+
+// Init Error Handler
+export const ERR_HANDLER = new ErrorHandler(LOGGER)
+
+// Init Db Connection
+export const DATA_SOURCE = DataSource
+DataSource.initialize()
+  .catch((error) => ERR_HANDLER.catchError(error))
+
+// Init Axios Http Client
+export const HTTP_CLIENT = new AxiosHttpClient();
+

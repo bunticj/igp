@@ -4,8 +4,8 @@ import https from "https";
 import fs from "fs"
 import { Server as IoServer } from "socket.io"
 import { LOGGER } from "./businnesLayer/utils/Logger";
-import { EnvConfig } from "./businnesLayer/config/EnvConfig";
-import { HelperConstants } from "./businnesLayer/config/HelperConstants";
+import { EnvConfig } from "./config/EnvConfig";
+import { HelperConstants } from "./config/HelperConstants";
 import { SocketManager } from "./socketLayer/SocketManager";
 
 

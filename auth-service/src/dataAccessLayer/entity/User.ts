@@ -1,5 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
-import { UserPromotions } from "./UserPromotions";
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from "typeorm";
+import { UserToken } from "./UserToken";
 import { RoleType } from "../../../../common/enum/RoleType";
 
 @Entity()
@@ -25,6 +25,12 @@ export class User {
   })
   balance: number;
 
-  @OneToMany(() => UserPromotions, (userPromotion) => userPromotion.user)
-  userPromotions: UserPromotions[];
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  created_at: Date;
+
+    @OneToOne(() => UserToken, (userToken) => userToken.user)
+  userToken: UserToken;
 }

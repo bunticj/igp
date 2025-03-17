@@ -26,8 +26,15 @@ export class User {
   })
   balance: number;
 
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  created_at: Date;
+
   @OneToMany(() => UserPromotion, (userPromotion) => userPromotion.user)
   userPromotions: UserPromotion[];
-    @OneToOne(() => UserToken, (userToken) => userToken.user)
-  userToken: UserToken; 
+  
+  @OneToOne(() => UserToken, (userToken) => userToken.user)
+  userToken: UserToken;
 }

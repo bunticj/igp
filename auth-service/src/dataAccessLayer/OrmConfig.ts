@@ -1,6 +1,7 @@
-import { EnvConfig } from "../businessLayer/config/EnvConfig";
+import { EnvConfig } from "../config/EnvConfig";
 import { DataSource } from "typeorm";
-
+import { User } from "./entity/User";
+import { UserToken } from "./entity/UserToken";
 
 export default new DataSource({
     type: "postgres",
@@ -9,7 +10,7 @@ export default new DataSource({
     username: EnvConfig.DB_USER,
     password: EnvConfig.DB_PASSWORD,
     database: EnvConfig.DB_NAME,
-    entities: ['./src/dataAccessLayer/entity/*.{js,ts}'],
+    entities: [User, UserToken],
     migrations: ['./src/dataAccessLayer/migrations/*.{js,ts}'],
     synchronize: false,
     logging: EnvConfig.VERBOSE_LOGS,

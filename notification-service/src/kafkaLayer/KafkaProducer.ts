@@ -1,7 +1,7 @@
 import { KafkaClient } from "./KafkaClient"
 import { Producer } from 'kafkajs';
-import { EnvConfig } from '../businnesLayer/config/EnvConfig';
-import { ERR_HANDLER, LOGGER } from "../businnesLayer/config/Initialize";
+import { EnvConfig } from '../config/EnvConfig';
+import { ERR_HANDLER, LOGGER } from "../config/Initialize";
 
 class KafkaProducer {
     private producer: Producer

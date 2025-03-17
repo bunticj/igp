@@ -4,10 +4,10 @@ import https from "https";
 import cors from "cors";
 import express from "express";
 import fs from "fs"
-import { router } from "./apiLayer/router/UserRouter";
-import { EnvConfig } from "./businessLayer/config/EnvConfig";
-import { HelperConstants } from "./businessLayer/config/HelperConstants";
-import { LOGGER } from "./businessLayer/config/Initialize";
+import { router } from "./apiLayer/router/Router";
+import { EnvConfig } from "./config/EnvConfig";
+import { HelperConstants } from "./config/HelperConstants";
+import { LOGGER } from "./config/Initialize";
 import { errorInterceptor } from "./apiLayer/middleware/ErrorMiddleware";
 import swaggerUi from "swagger-ui-express";
 import swaggerConfig from "./docs/swagger.json";

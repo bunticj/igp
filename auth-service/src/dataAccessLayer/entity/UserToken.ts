@@ -1,23 +1,20 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
-import { UserPromotions } from "./UserPromotions";
-
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
+import { User } from "./User";
 @Entity()
-export class UserTokens {
+export class UserToken {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  userId: string;
+  @OneToOne(() => User, { onDelete: "CASCADE" })
+  @JoinColumn({ name: "userId", referencedColumnName: "id" })
+  user: User;
 
   @Column()
   refreshToken: string;
 
-  @Column()
-  role: number;
-
-  @Column("decimal")
-  balance: number;
-
-  @OneToMany(() => UserPromotions, (userPromotion) => userPromotion.user)
-  userPromotions: UserPromotions[];
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP', 
+  })
+  created_at: Date;
 }
