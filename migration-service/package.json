@@ -7,6 +7,7 @@
     "start": "ts-node src/Migration.ts"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.2",
     "dotenv": "^16.4.7",
     "pg": "8.14.0",
     "reflect-metadata": "^0.2.2",

@@ -9,11 +9,15 @@ export const LOGGER = new WinstonLogger(EnvConfig.VERBOSE_LOGS);
 
 // Init Error Handler
 export const ERR_HANDLER = new ErrorHandler(LOGGER)
+export const DATA_SOURCE = DataSource
 
 // Init Db Connection
-export const DATA_SOURCE = DataSource
-DataSource.initialize()
-  .catch((error) => ERR_HANDLER.catchError(error))
+setTimeout(() => {
+  DataSource.initialize()
+    .then(res => LOGGER.info("Database connected!"))
+    .catch((error) => ERR_HANDLER.catchError(error))
+}, 2500)
+
 
 // Init Axios Http Client
 export const HTTP_CLIENT = new AxiosHttpClient();

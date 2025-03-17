@@ -2,6 +2,7 @@ import "reflect-metadata";
 import AppDataSource from "./OrmConfig";
 import { User } from "./entity/User";
 import { RoleType } from "../../common/enum/RoleType";
+import bcrypt from "bcryptjs";
 
 async function initDb() {
   await AppDataSource.synchronize();
@@ -12,7 +13,9 @@ async function initDb() {
   if (!existingUser) {
     const defaultAdmin = new User();
     defaultAdmin.username = process.env.DEFAULT_ADMIN!;
-    defaultAdmin.password = process.env.DEFAULT_ADMIN_PASSWORD!; // TODO later, add bcrypt for hashing
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(process.env.DEFAULT_ADMIN_PASSWORD!, salt);
+    defaultAdmin.password = hash
     defaultAdmin.role = RoleType.Admin;
     await userRepository.save(defaultAdmin);
     console.log("Default admin user created!");
@@ -27,7 +30,7 @@ async function runMigration() {
     await AppDataSource.initialize();
     await initDb()
     // await AppDataSource.runMigrations();
-    /// console.log("Migration service completed. Shutting down.");
+    console.log("Migration service completed. Shutting down.");
     process.exit(0);
   } catch (error) {
     console.error("Error during database synchronization: ", error);
@@ -35,4 +38,6 @@ async function runMigration() {
   }
 }
 
-runMigration();
+setTimeout(async () => {
+  await runMigration();
+}, 1000)

@@ -3,7 +3,7 @@ import { CustomError } from "../../../../common/model/CustomError";
 import { ERR_HANDLER } from "../../config/Initialize";
 import { User } from "../../dataAccessLayer/entity/User";
 import express from "express";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { userService } from "../../businessLayer/service/UserService";
 import { HelperConstants } from "../../config/HelperConstants";
 import { RoleType } from "../../../../common/enum/RoleType";
@@ -20,11 +20,13 @@ class UserController {
             const { username, password } = userBody;
             const existingUser = await userService.getByUsername(username);
             if (existingUser) throw new CustomError(ErrorType.UserExist, "username already exists", { username });
-            const hashedPass = await bcrypt.hash(password!, HelperConstants.bcryptSaltRounds);
+
+            const salt = await bcrypt.genSalt(HelperConstants.bcryptSaltRounds);
+            const hashedPass = await bcrypt.hash(password!, salt);
             const user = await userService.createUser(username, hashedPass, RoleType.User);
 
             const tokens = authenticationService.signAuthTokens(user.id, RoleType.User);
-            await userTokenService.createUserToken(user.id!, tokens.refreshToken);
+            await userTokenService.createUserToken(user.id, tokens.refreshToken);
 
             // TODO trigger promotion service api
             res.status(200).send({ data: { user, tokens } });
@@ -41,11 +43,11 @@ class UserController {
             UserValidator.validateUserBody(userBody);
             const { username, password } = userBody;
             const existingUser = await userService.getByUsername(username);
+
             if (!existingUser) throw new CustomError(ErrorType.UserNotFound, "User doesn't exist", { username });
             const isMatch = await bcrypt.compare(password, existingUser.password!);
             if (!isMatch) throw new CustomError(ErrorType.Unauthorized, "Unauthorized");
             const tokens = authenticationService.signAuthTokens(existingUser.id, existingUser.role);
-        
             await userTokenService.createUserToken(existingUser.id!, tokens.refreshToken);
             res.status(200).send({ data: { user: existingUser, tokens } });
         }
@@ -60,7 +62,7 @@ class UserController {
             const userId = Number(req.params.userId);
             if (!Number.isInteger(userId)) {
                 throw new CustomError(ErrorType.BadRequest, "Invalid user id");
-              }
+            }
             const user = await userService.getByUserId(userId);
             if (!user) throw new CustomError(ErrorType.UserNotFound, "User doesn't exist", { userId });
             res.status(200).send({ data: user });
