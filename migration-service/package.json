@@ -1,0 +1,20 @@
+{
+  "name": "migration-service",
+  "version": "1.0.0",
+  "description": "Migration service to initialize and sync the database",
+  "main": "src/migration.ts",
+  "scripts": {
+    "start": "ts-node src/Migration.ts"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "pg": "8.14.0",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.21"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "5.8.2"
+  },
+  "license": "MIT"
+}

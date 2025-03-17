@@ -16,6 +16,22 @@ services:
       start_period: 20s
       timeout: 10s
 
+  migration-service:
+    build:
+      context: ./
+      dockerfile: ./migration-service/Dockerfile
+    container_name: migration-service
+    environment:
+      DB_HOST: database
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      DEFAULT_ADMIN: ${DEFAULT_ADMIN}
+      DEFAULT_ADMIN_PASSWORD: ${DEFAULT_ADMIN_PASSWORD}
+    depends_on:
+      - database
+
   zookeeper:
     image: wurstmeister/zookeeper
     ports:
