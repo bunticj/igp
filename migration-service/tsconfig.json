@@ -22,7 +22,7 @@
     "include": [
         "src/**/*.ts",
         "../common/**/*"
-
+,
     ],
     "exclude": [
         "node_modules"

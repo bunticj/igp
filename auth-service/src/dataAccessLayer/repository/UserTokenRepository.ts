@@ -24,7 +24,7 @@ export class UserTokenRepository {
             .createQueryBuilder()
             .delete()
             .from(UserToken)
-            .where(`created_at < DATE_SUB(NOW(), INTERVAL ${hours} HOUR)`);
+            .where(`createdAt < DATE_SUB(NOW(), INTERVAL ${hours} HOUR)`);
 
         await queryBuilder.execute();
     }

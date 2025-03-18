@@ -14,7 +14,7 @@ export class UserToken {
 
   @Column({
     type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP', 
+    default: () => 'CURRENT_TIMESTAMP'
   })
-  created_at: Date;
+  createdAt: Date;
 }

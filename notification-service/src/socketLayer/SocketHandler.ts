@@ -54,7 +54,6 @@ export class SocketHandler {
                 // Temp
                 MessageService.sendMessageToUserId(userId, new Message(MessageType.PromotionMessage, { por: "bezze por useru" }))
                 MessageService.sendMessageToSocketId(this.socket.id, new Message(MessageType.PromotionMessage, { por: "bezze por socketu" }))
-                MessageService.broadcastMessage(new Message(MessageType.PromotionMessage, { por: "bezze por svima" }))
 
             }
             catch (err) {

@@ -1,5 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from "typeorm";
-import { UserToken } from "./UserToken";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { UserPromotion } from "./UserPromotion";
 import { RoleType } from "../../../../common/enum/RoleType";
 
 @Entity()
@@ -31,6 +31,6 @@ export class User {
   })
   createdAt: Date;
 
-    @OneToOne(() => UserToken, (userToken) => userToken.user)
-  userToken: UserToken;
+  @OneToMany(() => UserPromotion, (userPromotion) => userPromotion.user)
+  userPromotions: UserPromotion[]; 
 }

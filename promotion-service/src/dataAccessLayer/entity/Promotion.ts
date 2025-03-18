@@ -26,4 +26,13 @@ export class Promotion {
 
   @OneToMany(() => UserPromotion, (userPromotion) => userPromotion.promotion)
   userPromotions: UserPromotion[];
+
+  constructor(title: string, description: string, amount: number, isActive: boolean, startDate: Date, endDate: Date) {
+    this.title = title;
+    this.description = description;
+    this.amount = amount;
+    this.isActive = isActive;
+    this.startDate = startDate;
+    this.endDate = endDate;
+  }
 }

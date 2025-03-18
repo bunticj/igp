@@ -23,3 +23,9 @@ export interface ITokenPayload {
     tokenType: TokenType;
     iss: string;
 }
+
+export interface IKafkaEvent<T> {
+    recipients: number[];
+    data: T;
+
+}

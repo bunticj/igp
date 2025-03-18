@@ -24,4 +24,10 @@ export class UserPromotion {
   @ManyToOne(() => Promotion, (promotion) => promotion.userPromotions)
   @JoinColumn({ name: "promotionId" })
   promotion: Promotion;
+ 
+  constructor(userId: number, promotionId: number, claimedAt?: Date) {
+    this.userId = userId;
+    this.promotionId = promotionId;
+    this.claimedAt = claimedAt;
+  }
 }
