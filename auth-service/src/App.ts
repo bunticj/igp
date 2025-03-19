@@ -17,6 +17,10 @@ import swaggerConfig from "./docs/swagger.json";
 function initServer() {
     const expressApp: express.Application = express();
 
+    expressApp.get('/health', (req: express.Request, res: express.Response) => {
+        res.status(200).json({ status: 'healthy' });
+    });
+    
     // Set middlewares
     expressApp.use(cors({ origin: "*" }));
     expressApp.use(express.urlencoded({ extended: true }));

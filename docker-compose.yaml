@@ -13,7 +13,7 @@ services:
       test: ["CMD", "pg_isready", "-U", "postgres"]
       interval: 30s
       retries: 3
-      start_period: 20s
+      start_period: 5s
       timeout: 10s
 
   migration-service:
@@ -30,19 +30,25 @@ services:
       DEFAULT_ADMIN: ${DEFAULT_ADMIN}
       DEFAULT_ADMIN_PASSWORD: ${DEFAULT_ADMIN_PASSWORD}
     depends_on:
-      - database
+      database:
+        condition: service_healthy
 
   zookeeper:
     image: wurstmeister/zookeeper
     container_name: zookeeper
     ports:
-    - "${ZOOKEEPER_PORT}:${ZOOKEEPER_PORT}"
-  
+      - "${ZOOKEEPER_PORT}:${ZOOKEEPER_PORT}"
+    healthcheck:
+      test: nc -z zookeeper ${ZOOKEEPER_PORT} || exit -1
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
   kafka:
     image: wurstmeister/kafka
     container_name: kafka
     ports:
-      - "${KAFKA_PORT}:${KAFKA_PORT}" 
+      - "${KAFKA_PORT}:${KAFKA_PORT}"
     environment:
       KAFKA_ADVERTISED_HOST_NAME: ${KAFKA_ADVERTISED_HOST_NAME}
       KAFKA_LISTENER_SECURITY_PROTOCOL: ${KAFKA_LISTENER_SECURITY_PROTOCOL}
@@ -51,20 +57,21 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
-      - zookeeper
+      zookeeper:
+        condition: service_healthy
     healthcheck:
-      test: ["CMD", "kafka-topics", "--zookeeper", "${KAFKA_ZOOKEEPER_CONNECT}", "--list"]
+      test: ["CMD", "nc", "-z", "kafka", "${KAFKA_PORT}"]
       interval: 30s
       retries: 3
-      start_period: 40s
+      start_period: 30s
       timeout: 10s
- 
+
   auth-service:
     build:
       context: ./
       dockerfile: ./auth-service/Dockerfile
     container_name: auth-service
-    ports: 
+    ports:
       - "${AUTH_SERVER_PORT}:${AUTH_SERVER_PORT}"
     environment:
       AUTH_SERVER_PORT: ${AUTH_SERVER_PORT}
@@ -78,15 +85,22 @@ services:
       DB_NAME: ${DB_NAME}
       JWT_SECRET: ${JWT_SECRET}
     depends_on:
-      - database
+      database:
+        condition: service_healthy
     restart: on-failure
+    healthcheck:
+      test: ["CMD", "curl", "-f", "${HTTP_PROTOCOL_TYPE}://${AUTH_SERVER_HOST}:${AUTH_SERVER_PORT}/health"]
+      interval: 30s
+      retries: 3
+      start_period: 30s
+      timeout: 10s
 
   promotion-service:
     build:
       context: ./
       dockerfile: ./promotion-service/Dockerfile
     container_name: promotion-service
-    ports: 
+    ports:
       - "${PROMOTION_SERVER_PORT}:${PROMOTION_SERVER_PORT}"
     environment:
       PROMOTION_SERVER_PORT: ${PROMOTION_SERVER_PORT}
@@ -100,15 +114,22 @@ services:
       DB_NAME: ${DB_NAME}
       JWT_SECRET: ${JWT_SECRET}
     depends_on:
-      - database
+      database:
+        condition: service_healthy
     restart: on-failure
+    healthcheck:
+      test: ["CMD", "curl", "-f", "${HTTP_PROTOCOL_TYPE}://${PROMOTION_SERVER_HOST}:${PROMOTION_SERVER_PORT}/health"]
+      interval: 30s
+      retries: 3
+      start_period: 30s
+      timeout: 10s
 
   notification-service:
     build:
       context: ./
       dockerfile: ./notification-service/Dockerfile
     container_name: notification-service
-    ports: 
+    ports:
       - "${NOTIFICATION_PORT}:${NOTIFICATION_PORT}"
     environment:
       NOTIFICATION_PORT: ${NOTIFICATION_PORT}
@@ -118,20 +139,18 @@ services:
       KAFKA_TOPIC_NAME: ${KAFKA_TOPIC_NAME}
       KAFKA_PORT: ${KAFKA_PORT}
       KAFKA_HOST: ${KAFKA_ADVERTISED_HOST_NAME}
+      JWT_SECRET: ${JWT_SECRET}
     depends_on:
-      - kafka
+      kafka:
+        condition: service_healthy
     restart: on-failure
-#  nginx`:
-#    image: nginx:latest
-#    container_name: nginx
-#    ports:
-#      - "${NGINX_PORT}:${NGINX_PORT}" 
-#    volumes:
-#      - ./nginx.conf:/etc/nginx/nginx.conf
-#    depends_on:
-#      - auth-service
-#      - notification-service
-#    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "${HTTP_PROTOCOL_TYPE}://${NOTIFICATION_HOST}:${NOTIFICATION_PORT}/health"]
+      interval: 30s
+      retries: 3
+      start_period: 30s
+      timeout: 10s
+
 networks:
   default:
     driver: bridge

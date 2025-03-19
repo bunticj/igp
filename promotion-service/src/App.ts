@@ -16,6 +16,12 @@ import { KProducer } from "./kafkaLayer/KafkaProducer";
 function initServer() {
     const expressApp: express.Application = express();
 
+    // Set health check
+    expressApp.get('/health', (req: express.Request, res: express.Response) => {
+        // TODO later add db connection check
+        res.status(200).json({ status: 'healthy' });
+    });
+
     // Set middlewares
     expressApp.use(cors({ origin: "*" }));
     expressApp.use(express.urlencoded({ extended: true }));

@@ -17,6 +17,7 @@ export default class MessageService {
         LOGGER.debug(`Sending message ${MessageType[message.messageType]} to User ${userId}`);
         const socketId = socketManager.getSocketId(userId);
         if (socketId) socketManager.io.to(socketId).emit(HelperConstants.messageName, message);
+        else LOGGER.error("User not found ")
     }
 }
 

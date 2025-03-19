@@ -6,6 +6,12 @@ import { SocketHandler } from './SocketHandler';
 import SchedulerService from '../businnesLayer/services/SchedulerService';
 import { SchedulerType } from '../businnesLayer/enum/SchedulerType';
 import { LOGGER } from '../config/Initialize';
+import { TokenType } from '../../../common/enum/TokenType';
+import { ITokenPayload } from '../../../common/util/CommonInterfaces';
+import { CustomError } from '../../../common/model/CustomError';
+import { ErrorType } from '../../../common/enum/ErrorType';
+import { verify } from "jsonwebtoken";
+import { EnvConfig } from '../config/EnvConfig';
 
 export class SocketManager {
     private userSockets: Map<number, SocketHandler> = new Map();
@@ -34,13 +40,20 @@ export class SocketManager {
         try {
             if (!socket || !socket.handshake.query.authorization) return false;
             const authToken = socket.handshake.query.authorization as string;
-            socket.userId = authToken.length;
+          const payload =  this.verifyJwt(authToken, TokenType.Access)
+            socket.userId = payload.sub;
             return true;
         }
         catch (error) {
             return false;
         }
     }
+
+    private verifyJwt(token: string, tokenType: TokenType): ITokenPayload {
+        const jwtPayload: ITokenPayload = (verify(token, EnvConfig.JWT_SECRET)) as any;
+        if (!jwtPayload || !jwtPayload.sub || jwtPayload.tokenType !== tokenType) throw new CustomError(ErrorType.Unauthorized, "Invalid token verification", { tokenType, token });
+        return jwtPayload;
+    };
 
     // init socket handlers, and save them for reference
     private addNewSocket(socket: IAuthSocket) {

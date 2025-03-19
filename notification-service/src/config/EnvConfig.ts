@@ -10,5 +10,7 @@ export const EnvConfig =  {
     VERBOSE_LOGS: process.env.VERBOSE_LOGS ? true : false,
     KAFKA_TOPIC_NAME: process.env.KAFKA_TOPIC_NAME,
     KAFKA_PORT: process.env.KAFKA_PORT,
-    KAFKA_HOST: process.env.KAFKA_HOST || "localhost"
+    KAFKA_HOST: process.env.KAFKA_HOST || "localhost",
+    JWT_SECRET: process.env.JWT_SECRET!
+
 }

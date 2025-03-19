@@ -3,7 +3,7 @@ import { IKafkaEvent } from "../../../../common/util/CommonInterfaces";
 import MessageService from "./MessageService";
 import { Message } from "../model/Message";
 import { MessageType } from "../enum/MessageType";
-import { ERR_HANDLER } from "src/config/Initialize";
+import { ERR_HANDLER } from "../../config/Initialize";
 
 
 export default class ConsumerService {
