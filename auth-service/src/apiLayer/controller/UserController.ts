@@ -7,16 +7,16 @@ import bcrypt from "bcryptjs";
 import { userService } from "../../businessLayer/service/UserService";
 import { HelperConstants } from "../../config/HelperConstants";
 import { RoleType } from "../../../../common/enum/RoleType";
-import { UserValidator } from "../validator/UserValidator";
 import { authenticationService } from "../../businessLayer/service/AutheticationService";
 import { userTokenService } from "../../businessLayer/service/UserTokenService";
+import { Validator } from "../validator/Validator";
 
 
 class UserController {
     public async register(req: express.Request, res: express.Response) {
         try {
             const userBody = req.body as User;
-            UserValidator.validateUserBody(userBody);
+            Validator.validateUserBody(userBody);
             const { username, password } = userBody;
             const existingUser = await userService.getByUsername(username);
             if (existingUser) throw new CustomError(ErrorType.UserExist, "username already exists", { username });
@@ -26,9 +26,7 @@ class UserController {
             const user = await userService.createUser(username, hashedPass, RoleType.User);
 
             const tokens = authenticationService.signAuthTokens(user.id, RoleType.User);
-            await userTokenService.createUserToken(user.id, tokens.refreshToken);
-
-            // TODO trigger promotion service api
+            await userService.triggerNewUserPromotion(user.id)
             res.status(200).send({ data: { user, tokens } });
         }
         catch (err) {
@@ -40,10 +38,9 @@ class UserController {
     public async login(req: express.Request, res: express.Response) {
         try {
             const userBody = req.body as User;
-            UserValidator.validateUserBody(userBody);
+            Validator.validateUserBody(userBody);
             const { username, password } = userBody;
             const existingUser = await userService.getByUsername(username);
-
             if (!existingUser) throw new CustomError(ErrorType.UserNotFound, "User doesn't exist", { username });
             const isMatch = await bcrypt.compare(password, existingUser.password!);
             if (!isMatch) throw new CustomError(ErrorType.Unauthorized, "Unauthorized");
@@ -57,14 +54,16 @@ class UserController {
         }
     }
 
-    public async getById(req: express.Request, res: express.Response) {
+    public async updateRole(req: express.Request, res: express.Response) {
         try {
-            const userId = Number(req.params.userId);
-            if (!Number.isInteger(userId)) {
-                throw new CustomError(ErrorType.BadRequest, "Invalid user id");
-            }
+            const userId = Number(req.params.userId)
+            Validator.validateUserRole(req.body, userId)
+            const role = req.body.roleType as RoleType;
             const user = await userService.getByUserId(userId);
             if (!user) throw new CustomError(ErrorType.UserNotFound, "User doesn't exist", { userId });
+            if (role === user.role) throw new CustomError(ErrorType.BadRequest, `Role is already ${role}`, { role })
+            user.role = role
+            await userService.updateUser(user)
             res.status(200).send({ data: user });
         }
         catch (err) {
@@ -72,8 +71,6 @@ class UserController {
             res.status(error.status).send({ error: error.data });
         }
     }
-
-
 
 }
 

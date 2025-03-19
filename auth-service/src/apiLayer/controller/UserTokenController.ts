@@ -13,7 +13,7 @@ class UserTokenController {
             const refreshToken = req.body.refreshToken;
             if (!refreshToken || typeof refreshToken !== 'string') throw new CustomError(ErrorType.RequestBodyError, "Invalid refreshToken", { refreshToken });
             const { sub, role } = authenticationService.verifyJwt(refreshToken, TokenType.Refresh);
-            const tokens = userTokenService.handleRefreshToken(sub, refreshToken, role);
+            const tokens = await userTokenService.handleRefreshToken(sub, refreshToken, role);
             res.status(200).send({ data: tokens });
         }
         catch (err) {

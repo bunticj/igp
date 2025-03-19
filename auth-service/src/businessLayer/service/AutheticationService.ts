@@ -8,7 +8,7 @@ import { EnvConfig } from "../../config/EnvConfig";
 import { CustomError } from "../../../../common/model/CustomError";
 
 
- class AuthenticationService {
+class AuthenticationService {
     public signAuthTokens(userId: number, role: RoleType): ITokenResponse {
         const accessToken = this.signToken(userId, role, TokenType.Access);
         const refreshToken = this.signToken(userId, role, TokenType.Refresh);
@@ -22,6 +22,12 @@ import { CustomError } from "../../../../common/model/CustomError";
         return token;
     }
 
+    public getSysUserAccessToken() {
+        const payload: ITokenPayload = { sub: HelperConstants.systemUser, role: RoleType.Admin, tokenType: TokenType.Access, iss: HelperConstants.serverUrlName };
+        const token = sign(payload, EnvConfig.JWT_SECRET, { expiresIn: HelperConstants.systemUserTokenExpirationInSeconds });
+        return token;
+    }
+    
     public verifyJwt = (token: string, tokenType: TokenType): ITokenPayload => {
         if (!token) throw new CustomError(ErrorType.Unauthorized, ErrorType[ErrorType.Unauthorized]);
         const jwtPayload: ITokenPayload = (verify(token, EnvConfig.JWT_SECRET)) as any;

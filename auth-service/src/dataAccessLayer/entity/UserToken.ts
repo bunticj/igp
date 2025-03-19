@@ -5,6 +5,9 @@ export class UserToken {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column()
+  userId: number;
+  
   @OneToOne(() => User, { onDelete: "CASCADE" })
   @JoinColumn({ name: "userId", referencedColumnName: "id" })
   user: User;
@@ -13,8 +16,7 @@ export class UserToken {
   refreshToken: string;
 
   @Column({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP', 
+    type: 'timestamp'
   })
-  createdAt: Date;
+  expiresAt: Date;
 }

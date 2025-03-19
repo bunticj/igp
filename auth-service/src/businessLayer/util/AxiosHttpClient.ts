@@ -1,20 +1,16 @@
 import axios, { AxiosResponse } from "axios";
-import { ErrorType } from "../../../../common/enum/ErrorType";
-import { CustomError } from "../../../../common/model/CustomError";
+import { IDictionary } from "../../../../common/util/CommonInterfaces";
+
 
 export class AxiosHttpClient {
-    public async sendHttpRequest<T, K>(url: string, body: K, methodCaseInsensitive: string): Promise<AxiosResponse<T>> {
-        const method = methodCaseInsensitive.toLowerCase();
+    public static async sendRequest<T, K>(url: string, token: string, body: IDictionary<K>): Promise<AxiosResponse<T>> {
         let headers = {
             "Accept": "application/json",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
         };
-
-        switch (method) {
-            case "get": return axios.get(url, { headers });
-            case "post": return axios.post(url, body, { headers });
-            default: throw new CustomError(ErrorType.InvalidMethod, "Unsupported method", { method })
-        }
+        if (Object.keys(body).length) return await axios.post(url, body, { headers });
+        else return await axios.get(url, { headers });
     }
 }
 

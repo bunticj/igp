@@ -4,9 +4,9 @@ import { UserToken } from '../entity/UserToken';
 export class UserTokenRepository {
     private repository = DATA_SOURCE.getRepository(UserToken);
 
-    async findById(id: number): Promise<UserToken | null> {
+    async findByUserId(userId: number): Promise<UserToken | null> {
         return await this.repository.findOne({
-            where: { id },
+            where: { userId }
         });
     }
 
@@ -14,18 +14,15 @@ export class UserTokenRepository {
         return await this.repository.save(user);
     }
 
-    async delete(id: number) {
-        return await this.repository.delete(id);
+    async deleteByUserId(userId: number) {
+        return await this.repository.delete({ userId });
     }
 
-    async clearExpiredTokens(durationInSeconds: number) {
-        const hours = durationInSeconds / 3600;
+    async clearExpiredTokens() {
         const queryBuilder = this.repository
             .createQueryBuilder()
             .delete()
-            .from(UserToken)
-            .where(`createdAt < DATE_SUB(NOW(), INTERVAL ${hours} HOUR)`);
-
+            .where(`expiresAt < NOW()`); 
         await queryBuilder.execute();
     }
 }

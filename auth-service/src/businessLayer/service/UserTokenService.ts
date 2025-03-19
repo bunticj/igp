@@ -14,24 +14,29 @@ class UserTokenService {
     }
 
     public async createUserToken(userId: number, refreshToken: string): Promise<UserToken> {
-        await this.repository.delete(userId);
+        await this.repository.deleteByUserId(userId);
         const userToken = new UserToken();
-        userToken.id = userId;
+        userToken.userId = userId;
         userToken.refreshToken = refreshToken;
+        const expDate = new Date();
+        const expInHours = HelperConstants.refreshTokenExpirationInSeconds / 3600
+        expDate.setHours(expDate.getHours() + expInHours); // Add 8 hours
+        console.log(expDate); // OS
+        userToken.expiresAt = expDate;
         const data = await this.repository.save(userToken);
         return data;
     }
 
 
     public async handleRefreshToken(userId: number, oldRefreshToken: string, role: RoleType): Promise<ITokenResponse> {
-        await this.repository.clearExpiredTokens(HelperConstants.accessTokenExpirationInSeconds)
-        const userTokenData = await this.repository.findById(userId);
+        await this.repository.clearExpiredTokens()
+        const userTokenData = await this.repository.findByUserId(userId);
         if (!userTokenData || oldRefreshToken !== userTokenData.refreshToken) throw new CustomError(ErrorType.Unauthorized, "Invalid refresh token", { oldRefreshToken, userTokenData });
         const tokens = authenticationService.signAuthTokens(userId, role);
         await this.createUserToken(userId, tokens.refreshToken);
         return tokens;
     }
 
- }
+}
 
 export const userTokenService = new UserTokenService();
