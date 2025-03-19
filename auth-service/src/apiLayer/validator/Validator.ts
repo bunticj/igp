@@ -11,10 +11,10 @@ export class Validator {
         if (!userBody.password || typeof userBody.username !== 'string') throw new CustomError(ErrorType.RequestBodyError, "Invalid password", { ...userBody });
     }
 
-    public static validateUserRole(body: Partial<User>, userId: number) {
+    public static validateUserRole(role: RoleType, userId: number) {
         if (!Number.isInteger(userId)) throw new CustomError(ErrorType.BadRequest, "Invalid user id");
-        if (typeof body.role !== 'string' || !Object.values(RoleType).includes(body.role as RoleType)) {
-            throw new CustomError(ErrorType.RequestBodyError, "Invalid role", { ...body });
+        if (typeof role !== 'string' || !Object.values(RoleType).includes(role)) {
+            throw new CustomError(ErrorType.RequestBodyError, "Invalid role", {role});
         }
     }
 }

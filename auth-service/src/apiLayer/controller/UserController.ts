@@ -1,6 +1,6 @@
 import { ErrorType } from "../../../../common/enum/ErrorType";
 import { CustomError } from "../../../../common/model/CustomError";
-import { ERR_HANDLER } from "../../config/Initialize";
+import { ERR_HANDLER, LOGGER } from "../../config/Initialize";
 import { User } from "../../dataAccessLayer/entity/User";
 import express from "express";
 import bcrypt from "bcryptjs";
@@ -57,8 +57,8 @@ class UserController {
     public async updateRole(req: express.Request, res: express.Response) {
         try {
             const userId = Number(req.params.userId)
-            Validator.validateUserRole(req.body, userId)
-            const role = req.body.roleType as RoleType;
+            const role = req.body.role as RoleType;
+            Validator.validateUserRole(req.body.role, userId)
             const user = await userService.getByUserId(userId);
             if (!user) throw new CustomError(ErrorType.UserNotFound, "User doesn't exist", { userId });
             if (role === user.role) throw new CustomError(ErrorType.BadRequest, `Role is already ${role}`, { role })

@@ -9,6 +9,8 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - db_data:/var/lib/postgresql/data 
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "postgres"]
       interval: 30s
@@ -55,8 +57,11 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL: ${KAFKA_LISTENER_SECURITY_PROTOCOL}
       KAFKA_ZOOKEEPER_CONNECT: ${ZOOKEEPER_HOST}:${ZOOKEEPER_PORT}
       KAFKA_CREATE_TOPICS: ${KAFKA_CREATE_TOPICS}
+      KAFKA_LOG_DIRS: "/kafka"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - kafka_data:/kafka 
+
     depends_on:
       zookeeper:
         condition: service_healthy
@@ -157,3 +162,6 @@ services:
 networks:
   default:
     driver: bridge
+volumes:
+  db_data:  
+  kafka_data:
