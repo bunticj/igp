@@ -29,9 +29,16 @@ class KafkaProducer {
             await this.producer.disconnect()
         }
     }
+
+    async shutDown() {
+        LOGGER.info('Gracefully shutting down Kafka consumer...');
+        await this.producer.disconnect()
+        process.exit(0);
+    }
 }
 
 export const KProducer = new KafkaProducer();
+KProducer.init();
 
 
 

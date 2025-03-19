@@ -1,10 +1,10 @@
 
-import { ErrorType } from "../../../../common/enum/ErrorType";
-import { IErrorResponse } from "../../../../common/CommonInterfaces/IErrorResponse";
-
-import { CustomError } from "../../../../common/model/CustomError";
 import express from "express";
+
+import { ErrorType } from "../../../../common/enum/ErrorType";
+import { CustomError } from "../../../../common/model/CustomError";
 import { ERR_HANDLER } from "../../config/Initialize";
+import { IErrorResponse } from "../../../../common/util/CommonInterfaces";
 
 // handle express errors
 export const errorInterceptor = (error: any, req: express.Request, res: express.Response, next: express.NextFunction): void => {

@@ -34,6 +34,7 @@ services:
 
   zookeeper:
     image: wurstmeister/zookeeper
+    container_name: zookeeper
     ports:
     - "${ZOOKEEPER_PORT}:${ZOOKEEPER_PORT}"
   

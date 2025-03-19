@@ -16,7 +16,7 @@ setTimeout(() => {
   DataSource.initialize()
     .then(res => LOGGER.info("Database connected!"))
     .catch((error) => ERR_HANDLER.catchError(error))
-}, 2500)
+}, 4000)
 
 
 // Init Axios Http Client

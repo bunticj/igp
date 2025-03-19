@@ -3,7 +3,7 @@ import { EnvConfig } from '../config/EnvConfig';
 import { kafkaConfig } from '../config/KafkaConfig';
 import { KafkaClient } from './KafkaClient';
 import { ERR_HANDLER, LOGGER } from '../config/Initialize';
-import ConsumerService from 'src/businnesLayer/services/ConsumerService';
+import ConsumerService from '../businnesLayer/services/ConsumerService';
 
 class KafkaConsumer {
     private consumer: Consumer
@@ -41,5 +41,5 @@ export const KConsumer = new KafkaConsumer();
 
 setTimeout(() => {
     KConsumer.startConsuming().catch(err => ERR_HANDLER.catchError(err))
-}, 7000)
+}, 5000)
 
