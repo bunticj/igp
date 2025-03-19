@@ -1,5 +1,5 @@
 import { IPromotionEvent } from "../interface/IPromotionEvent";
-import { IKafkaEvent } from "common/util/CommonInterfaces";
+import { IKafkaEvent } from "../../../../common/util/CommonInterfaces";
 import MessageService from "./MessageService";
 import { Message } from "../model/Message";
 import { MessageType } from "../enum/MessageType";
