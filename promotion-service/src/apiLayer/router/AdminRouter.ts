@@ -6,6 +6,5 @@ import { PromotionValidator } from '../validator/PromotionValidator';
 export const adminRouter = express.Router();
 
 adminRouter.post('/promotion/trigger', promotionController.assignWelcomePromotion);
-
 adminRouter.post('/promotion',validateBody(PromotionValidator.createPromotionBodySchema()), promotionController.createPromotion);
 
