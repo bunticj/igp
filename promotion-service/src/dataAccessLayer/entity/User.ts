@@ -21,7 +21,7 @@ export class User {
 
   @Column({
     type: 'decimal',
-    default: 0.00,
+    default: 0,
   })
   balance: number;
 

@@ -4,6 +4,10 @@ import { HelperConstants } from "../../config/HelperConstants";
 import { IKafkaEvent } from "../../../../common/util/CommonInterfaces";
 import { UserPromotionsRepository } from "../../dataAccessLayer/repository/UserPromotionRepository";
 import { UserPromotion } from "../../dataAccessLayer/entity/UserPromotion";
+import { userService } from "./UserService";
+import { CustomError } from "../../../../common/model/CustomError";
+import { ErrorType } from "../../../../common/enum/ErrorType";
+import { IPaginatedData, IUserPromotions } from "../util/HelperInterface";
 
 class PromotionService {
     private promotionRepo: PromotionRepository;
@@ -22,9 +26,6 @@ class PromotionService {
             return newProm;
         });
         return await this.saveUserPromotions(userPromotions);
-    }
-    async saveUserPromotions(userPromotions: UserPromotion[]) {
-        return await this.userPromotionRepo.saveMany(userPromotions);
     }
 
     async addWelcomePromotion(userId: number): Promise<IKafkaEvent<Promotion>> {
@@ -49,10 +50,17 @@ class PromotionService {
         return await this.userPromotionRepo.findByUserIdAndPromotionId(userId, promotionId);
     }
 
-    async fetchAllByUserId(userId: number, isClaimed?: boolean): Promise<UserPromotion[]> {
-        return await this.userPromotionRepo.findAllByUserId(userId, isClaimed);
+    async fetchAllByUserId(userId: number, page: number = 1, limit: number = 10, isClaimed?: boolean): Promise<IPaginatedData<IUserPromotions>> {
+        const user = await userService.fetchById(userId);
+        if (!user) throw new CustomError(ErrorType.BadRequest, "Invalid user id", { userId })
+        const pagData = await this.userPromotionRepo.findAllByUserId(userId, page, limit, isClaimed);
+        return { pagination: pagData.pagination, data: { promotions: pagData.data, user } }
     }
-    
+
+    async saveUserPromotions(userPromotions: UserPromotion[]) {
+        return await this.userPromotionRepo.saveMany(userPromotions);
+    }
+
     generatePromotion(title: string, description: string, amount: number, isActive: boolean, startDate: Date, endDate: Date) {
         const promotion = new Promotion();
         promotion.title = title;

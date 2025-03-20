@@ -3,8 +3,6 @@ import { Server, Socket } from 'socket.io';
 import { IAuthSocket } from '../businnesLayer/interface/IAuthSocket';
 import { HelperConstants } from '../config/HelperConstants';
 import { SocketHandler } from './SocketHandler';
-import SchedulerService from '../businnesLayer/services/SchedulerService';
-import { SchedulerType } from '../businnesLayer/enum/SchedulerType';
 import { LOGGER } from '../config/Initialize';
 import { TokenType } from '../../../common/enum/TokenType';
 import { ITokenPayload } from '../../../common/util/CommonInterfaces';
@@ -58,13 +56,11 @@ export class SocketManager {
     // init socket handlers, and save them for reference
     private addNewSocket(socket: IAuthSocket) {
         const userId = socket.userId!;
-        SchedulerService.cancelScheduler(SchedulerType.DisconnectPlayer, userId);
         const oldSocketHandler = this.userSockets.get(userId);
         this.userSockets.set(userId, new SocketHandler(socket, oldSocketHandler?.socket));
     }
 
     public removeSocket(userId: number) {
-        SchedulerService.cancelScheduler(SchedulerType.DisconnectPlayer, userId);
         this.userSockets.delete(userId)
     }
 

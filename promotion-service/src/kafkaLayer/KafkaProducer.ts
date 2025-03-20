@@ -17,21 +17,16 @@ class KafkaProducer {
         try {
             const result = await this.producer.send({
                 topic: topic,
-                messages: [
-                    { value: Buffer.from(JSON.stringify(data)) },
-                ],
+                messages: [{ value: Buffer.from(JSON.stringify(data)) }],
             })
             LOGGER.debug(`Messages produced: ${JSON.stringify(result)}`)
         } catch (err) {
             ERR_HANDLER.catchError(err as Error, { topic, data })
         }
-        finally {
-            await this.producer.disconnect()
-        }
     }
 
     async shutDown() {
-        LOGGER.info('Gracefully shutting down Kafka consumer...');
+        LOGGER.info('Gracefully shutting down Kafka Producer...');
         await this.producer.disconnect()
         process.exit(0);
     }

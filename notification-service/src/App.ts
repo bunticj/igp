@@ -46,11 +46,10 @@ process.on('unhandledRejection', (error: Error) => {
     ERR_HANDLER.catchError(error, { event: 'unhandledRejection' });
 });
 process.on('SIGTERM', async () => {
-    LOGGER.info('Received SIGTERM, shutting down gracefully...');
+    LOGGER.info('Received SIGTERM, shutting down...');
     await KConsumer.shutDown();
-    process.exit(0);
 });
 process.on('SIGINT', async () => {
-    LOGGER.info('Received SIGINT, shutting down gracefully...');
+    LOGGER.info('Received SIGINT, shutting down...');
     await KConsumer.shutDown();
 });

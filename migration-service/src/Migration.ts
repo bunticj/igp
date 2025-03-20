@@ -40,4 +40,4 @@ async function runMigration() {
 
 setTimeout(async () => {
   await runMigration();
-}, 10000)
+}, 1000)

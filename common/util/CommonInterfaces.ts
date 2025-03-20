@@ -37,9 +37,5 @@ export interface IPromotion {
     isActive: boolean;
     startDate: Date;
     endDate: Date;
-}
-
-export interface ICreatePromotion {
-    promotion: IPromotion;
-    userIds: number[];
+    claimedAt?: Date;
 }

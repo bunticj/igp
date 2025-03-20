@@ -1,5 +1,5 @@
 
-import { dateTransformer } from 'src/businessLayer/util/DateTransformer';
+import { dateTransformer } from '../../businessLayer/util/DateTransformer';
 import { z } from 'zod';
 
 export class PromotionValidator {
@@ -21,6 +21,8 @@ export class PromotionValidator {
             userIds: z.array(z.number()).nonempty('User IDs cannot be empty'),
         });
     }
+
+
 }
 
 
