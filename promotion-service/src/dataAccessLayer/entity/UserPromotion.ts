@@ -17,11 +17,11 @@ export class UserPromotion {
   })
   claimedAt?: Date;
 
-  @ManyToOne(() => User, (user) => user.userPromotions)
+  @ManyToOne(() => User, (user) => user.userPromotions, { cascade: true })
   @JoinColumn({ name: "userId" })
   user: User;
 
-  @ManyToOne(() => Promotion, (promotion) => promotion.userPromotions)
+  @ManyToOne(() => Promotion, (promotion) => promotion.userPromotions, { cascade: true })
   @JoinColumn({ name: "promotionId" })
   promotion: Promotion;
 }

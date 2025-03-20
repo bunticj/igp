@@ -4,10 +4,10 @@ import { ERR_HANDLER } from "../../config/Initialize";
 import { EnvConfig } from "../../config/EnvConfig";
 import { CustomError } from "../../../../common/model/CustomError";
 import { ErrorType } from "../../../../common/enum/ErrorType";
-import { promotionService } from "../../businessLayer/service/UserPromotionService";
+import { promotionService } from "../../businessLayer/service/PromotionService";
 import { KProducer } from "../../kafkaLayer/KafkaProducer";
 import { Promotion } from "src/dataAccessLayer/entity/Promotion";
-import { ICreatePromotionBody } from "common/util/CommonInterfaces";
+import { ICreatePromotion } from "common/util/CommonInterfaces";
 
 class PromotionController {
 
@@ -27,8 +27,8 @@ class PromotionController {
 
     public async createPromotion(req: express.Request, res: express.Response) {
         try {
-            const body = req.body as ICreatePromotionBody;
-            const data = await promotionService.savePromotion(body.promotion as Promotion, body.userIds);
+            const body = req.body as ICreatePromotion;
+            const data = await promotionService.insertNewPromotion(body.promotion as Promotion, body.userIds);
             await KProducer.produceMessages(EnvConfig.KAFKA_TOPIC_NAME!, data)
             res.status(200).send({ data: 'OK' });
         }

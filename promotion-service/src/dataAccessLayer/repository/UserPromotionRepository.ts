@@ -5,7 +5,7 @@ import { IDictionary } from 'common/util/CommonInterfaces';
 
 export class UserPromotionsRepository {
     private repository = DATA_SOURCE.getRepository(UserPromotion);
-
+    
     async findAllByUserId(userId: number, isClaimed?: boolean): Promise<UserPromotion[]> {
         const whereConditions: IDictionary = { userId };
 
@@ -21,6 +21,7 @@ export class UserPromotionsRepository {
     async findByUserIdAndPromotionId(userId: number, promotionId: number): Promise<UserPromotion | null> {
         return await this.repository.findOne({
             where: { userId, promotionId },
+            relations: ['promotion', 'user']
         });
     }
 
@@ -32,7 +33,7 @@ export class UserPromotionsRepository {
         return await this.repository.save(userPromotions);
     }
 
- 
+
     async delete(userPromotionId: number): Promise<void> {
         await this.repository.delete(userPromotionId);
     }

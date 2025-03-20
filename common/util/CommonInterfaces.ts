@@ -30,7 +30,7 @@ export interface IKafkaEvent<T> {
 }
 
 export interface IPromotion {
-    id : number;
+    id?: number;
     title: string;
     description: string;
     amount: number;
@@ -39,11 +39,7 @@ export interface IPromotion {
     endDate: Date;
 }
 
-
-type CreatePromotionType = Omit<IPromotion, "id">
-
-
-export interface ICreatePromotionBody {
-    promotion: CreatePromotionType;
+export interface ICreatePromotion {
+    promotion: IPromotion;
     userIds: number[];
 }
