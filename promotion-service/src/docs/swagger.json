@@ -120,6 +120,12 @@
       }
     }
   },
+  "servers": [
+    {
+      "url": "http://localhost:4000",
+      "description": "Local promotion server"
+    }
+  ],
   "paths": {
     "/api/v1/admin/promotion": {
       "post": {
