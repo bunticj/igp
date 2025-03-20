@@ -8,7 +8,7 @@ export const HelperConstants = {
     // Configuration
     systemUser: 1,
     bcryptSaltRounds: 10,
-    accessTokenExpirationInSeconds: 60000000, // 10 mins  // TEMP
+    accessTokenExpirationInSeconds: 600, // 10 mins  
     refreshTokenExpirationInSeconds: 28800, // 8h
     systemUserTokenExpirationInSeconds: 60
 

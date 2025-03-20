@@ -9,5 +9,4 @@ export const router = express.Router();
 router.post('/user/register', userController.register);
 router.post('/user/login', userController.login);
 router.post('/token/refresh', isUser, userTokenController.refreshToken);
-
 router.patch('/user/:userId', isAdmin, userController.updateRole);

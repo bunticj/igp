@@ -35,6 +35,21 @@
           "id"
         ]
       },
+      "tokens": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string"
+          },
+          "refreshToken": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "accessToken",
+          "refreshToken"
+        ]
+      },
       "errorResponse": {
         "type": "object",
         "properties": {
@@ -67,10 +82,14 @@
             "properties": {
               "user": {
                 "$ref": "#/components/schemas/user"
+              },
+              "tokens": {
+                "$ref": "#/components/schemas/tokens"
               }
             },
             "required": [
-              "user"
+              "user",
+              "tokens"
             ]
           }
         },
@@ -106,7 +125,7 @@
     }
   ],
   "paths": {
-    "/api/v1/register": {
+    "/api/v1/user/register": {
       "post": {
         "tags": [
           "User"
@@ -165,10 +184,10 @@
         }
       }
     },
-    "/api/v1/login": {
+    "/api/v1/user/login": {
       "post": {
         "tags": [
-          "Author"
+          "User"
         ],
         "description": "Login user",
         "responses": {
@@ -210,9 +229,11 @@
                 "type": "object",
                 "properties": {
                   "username": {
+                    "example": "dummy username",
                     "type": "string"
                   },
                   "password": {
+                    "example": "dummy password",
                     "type": "string"
                   }
                 }
@@ -222,12 +243,71 @@
         }
       }
     },
-    "/api/v1/user/{userId}": {
-      "get": {
+    "/api/v1/token/refresh": {
+      "post": {
         "tags": [
           "User"
         ],
-        "description": "Get user data by userId",
+        "description": "Refresh token - get new refresh and access token",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tokens"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "refreshToken": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuthSchema": []
+          }
+        ]
+      }
+    },
+    "/api/v1/user/{userId}": {
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "description": "Update user role - Admin token required",
         "parameters": [
           {
             "name": "userId",
@@ -241,20 +321,20 @@
         "responses": {
           "200": {
             "description": "OK",
+            "parameters": [
+              {
+                "name": "bookId",
+                "in": "path",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/user"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errorResponse"
                 }
               }
             }
@@ -275,6 +355,30 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "role": {
+                    "type": "string"
+                  }
                 }
               }
             }

@@ -5,4 +5,4 @@ export const publicRouter = express.Router();
 
 publicRouter.post('/promotion/claim', promotionController.claimPromotion);
 publicRouter.post('/promotion/claim-all', promotionController.claimAllPromotions);
-publicRouter.get('/promotion', promotionController.fetchAllUserPromotions); // TODO add req query for pagination and isclaimed filter
+publicRouter.get('/promotion', promotionController.fetchAllUserPromotions); 
