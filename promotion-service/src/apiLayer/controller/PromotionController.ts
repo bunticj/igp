@@ -6,12 +6,13 @@ import { CustomError } from "../../../../common/model/CustomError";
 import { ErrorType } from "../../../../common/enum/ErrorType";
 import { promotionService } from "../../businessLayer/service/UserPromotionService";
 import { KProducer } from "../../kafkaLayer/KafkaProducer";
+import { Promotion } from "src/dataAccessLayer/entity/Promotion";
+import { ICreatePromotionBody } from "common/util/CommonInterfaces";
 
 class PromotionController {
 
     public async assignWelcomePromotion(req: express.Request, res: express.Response) {
         try {
-            console.log("shit neki ovdje")
             const userId = req.body.userId
             if (!userId || typeof userId !== 'number') throw new CustomError(ErrorType.RequestBodyError, "Invalid userId", { userId });
             const data = await promotionService.addWelcomePromotion(userId);
@@ -24,11 +25,24 @@ class PromotionController {
         }
     }
 
-    public async test(req: express.Request, res: express.Response) {
-     
+    public async createPromotion(req: express.Request, res: express.Response) {
+        try {
+            const body = req.body as ICreatePromotionBody;
+            const data = await promotionService.savePromotion(body.promotion as Promotion, body.userIds);
+            await KProducer.produceMessages(EnvConfig.KAFKA_TOPIC_NAME!, data)
             res.status(200).send({ data: 'OK' });
-   
-       
+        }
+        catch (err) {
+            const error = ERR_HANDLER.catchError(err as Error, { url: req.originalUrl });
+            res.status(error.status).send({ error: error.data });
+        }
+    }
+
+    public async test(req: express.Request, res: express.Response) {
+
+        res.status(200).send({ data: 'OK' });
+
+
     }
 }
 

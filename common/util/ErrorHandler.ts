@@ -37,6 +37,7 @@ export class ErrorHandler {
             customError = new CustomError(ErrorType.UnknownError, error.message, { stack: error.stack, name: error.name });
             this.logger.critical(`unthrownError: ${JSON.stringify(customError)} \n additionalData = ${JSON.stringify(additionalData)}`);
         }
+
         else this.logger.error(`thrownError: ${JSON.stringify(customError)} \n additionalData = ${JSON.stringify(additionalData)}`);
         const status = this.handleErrorStatus(customError.errorType);
         return new ErrorResponse({ errorType: customError.errorType, message: error.message }, status);

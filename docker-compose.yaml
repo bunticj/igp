@@ -34,6 +34,7 @@ services:
     depends_on:
       database:
         condition: service_healthy
+    restart: on-failure
 
   zookeeper:
     image: wurstmeister/zookeeper
@@ -100,7 +101,7 @@ services:
       test: ["CMD", "curl", "-f", "${HTTP_PROTOCOL_TYPE}://${AUTH_SERVER_HOST}:${AUTH_SERVER_PORT}/health"]
       interval: 30s
       retries: 3
-      start_period: 30s
+      start_period: 40s
       timeout: 10s
 
   promotion-service:
@@ -129,7 +130,7 @@ services:
       test: ["CMD", "curl", "-f", "${HTTP_PROTOCOL_TYPE}://${PROMOTION_SERVER_HOST}:${PROMOTION_SERVER_PORT}/health"]
       interval: 30s
       retries: 3
-      start_period: 30s
+      start_period: 40s
       timeout: 10s
 
   notification-service:

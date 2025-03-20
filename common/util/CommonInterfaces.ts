@@ -27,5 +27,23 @@ export interface ITokenPayload {
 export interface IKafkaEvent<T> {
     recipients: number[];
     data: T;
+}
 
+export interface IPromotion {
+    id : number;
+    title: string;
+    description: string;
+    amount: number;
+    isActive: boolean;
+    startDate: Date;
+    endDate: Date;
+}
+
+
+type CreatePromotionType = Omit<IPromotion, "id">
+
+
+export interface ICreatePromotionBody {
+    promotion: CreatePromotionType;
+    userIds: number[];
 }

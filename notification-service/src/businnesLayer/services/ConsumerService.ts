@@ -1,5 +1,4 @@
-import { IPromotionEvent } from "../interface/IPromotionEvent";
-import { IKafkaEvent } from "../../../../common/util/CommonInterfaces";
+import { IKafkaEvent, IPromotion } from "../../../../common/util/CommonInterfaces";
 import MessageService from "./MessageService";
 import { Message } from "../model/Message";
 import { MessageType } from "../enum/MessageType";
@@ -10,7 +9,7 @@ export default class ConsumerService {
 
     public static handlePromotionMessage(jsonString: string): void {
         try {
-            const parsed = JSON.parse(jsonString) as IKafkaEvent<IPromotionEvent>;
+            const parsed = JSON.parse(jsonString) as IKafkaEvent<IPromotion>;
             const message = new Message(MessageType.PromotionMessage, parsed.data);
             parsed.recipients.forEach(userId => MessageService.sendMessageToUserId(userId, message));
         }

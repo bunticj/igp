@@ -19,20 +19,36 @@ class PromotionService {
         const title = "Welcome Bonus",
             description = `Get ${HelperConstants.welcomePromotionAmount} EUR on your first login!`,
             startDate = new Date(),
-            endDate = new Date();
-
+            endDate = new Date(),
+            isActive = true,
+            amount = HelperConstants.welcomePromotionAmount;
         endDate.setMonth(endDate.getMonth() + 1);
-        const promotion = new Promotion(title, description, HelperConstants.welcomePromotionAmount, true, startDate, endDate)
-        await this.addPromotionToUsers(promotion, [userId])
-        return { recipients: [userId], data: promotion }
+        const promotion = this.createPromotion(title, description, amount, isActive, startDate, endDate);
+        return await this.savePromotion(promotion, [userId]);
     }
 
-    async addPromotionToUsers(promotion: Promotion, userIds: number[]): Promise<UserPromotion[]> {
+    async savePromotion(promotion: Promotion, userIds: number[]): Promise<IKafkaEvent<Promotion>> {
         const savedPromotion = await this.promotionRepo.save(promotion);
-        const userPromotions = userIds.map((userId) => new UserPromotion(userId, savedPromotion.id));
-        return await this.userPromotionRepo.saveMany(userPromotions);
+        const userPromotions = userIds.map((userId) => {
+            const newProm = new UserPromotion()
+            newProm.promotion = savedPromotion;
+            newProm.userId = userId;
+            newProm.promotionId = savedPromotion.id;
+            return newProm;
+        });
+        await this.userPromotionRepo.saveMany(userPromotions);
+        return { recipients: userIds, data: savedPromotion }
     }
 
+    async saveUserPromotions(userIds: number[], promotionId: number): Promise<UserPromotion[]>{
+        const userPromotions = userIds.map((userId) => {
+            const newProm = new UserPromotion()
+            newProm.userId = userId;
+            newProm.promotionId = promotionId;
+            return newProm;
+        });
+        await this.userPromotionRepo.saveMany(userPromotions);
+    }
 
     async claimPromotion(userId: number, promotionId: number): Promise<void> {
         const userPromotion = await this.userPromotionRepo.findByUserIdAndPromotionId(userId, promotionId);
@@ -50,6 +66,17 @@ class PromotionService {
         await this.userPromotionRepo.saveMany(unclaimedPromotions);
     }
 
+    createPromotion(title: string, description: string, amount: number, isActive: boolean, startDate: Date, endDate: Date) {
+
+        const promotion = new Promotion();
+        promotion.title = title;
+        promotion.description = description;
+        promotion.amount = amount;
+        promotion.isActive = isActive;
+        promotion.startDate = startDate;
+        promotion.endDate = endDate;
+        return promotion;
+    }
 }
 
 export const promotionService = new PromotionService();
